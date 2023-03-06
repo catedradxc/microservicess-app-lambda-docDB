@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Microservices SPA</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg bg-light">
+		<div class="container-fluid">
+		  <a class="navbar-brand" href="#">MicroApp</a>
+		  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav">
+			  <li class="nav-item">
+				<a class="nav-link active" id="catalog" aria-current="page" onClick="loadResource('widget-catalog.html')">Catalog</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" id="customer" onClick="loadResource('widget-customer.html')">Customer</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" id="order" onClick="loadResource('widget-order.html')">Order</a>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	  </nav>
+	<h1>Microservices app</h1>
+	<main id="main-container">
+		
+	</main>
+
+	<script>
+		let URLbase = "https://7wfxq9gyz3.execute-api.eu-central-1.amazonaws.com/dev";
+		var itemSelecctedId
+		var customerSelecctedId
+		$("#main-container").load("./widget-catalog.html");
+		function loadResource (resourcePath){
+			$("#main-container").load(resourcePath);
+		}
+	</script>
+</body>
+</html>

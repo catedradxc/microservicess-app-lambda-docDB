@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<h2>Add customer form</h2>
+    <div class="mb-3">
+        <label for="formGroupExampleInput" class="form-label">Name</label>
+        <input type="text" class="form-control" name="name" id="name" placeholder="name">
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">FirstName</label>
+        <input type="text" class="form-control" name="firstname" id="firstname" placeholder="firstname">
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Email</label>
+        <input type="text" class="form-control" name="email" id="email" placeholder="email">
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Street</label>
+        <input type="text" class="form-control" name="street" id="street" placeholder="street">
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">City</label>
+        <input type="text" class="form-control" name="city" id="city" placeholder="city">
+      </div>
+      <button type="button" class="btn btn-link" id="add">Add</button>
+
+      <script>
+        $("#add").click(
+            function addItem(){
+                name = $("#name").val()
+                firstname = $("#firstname").val()
+                email = $("#email").val()
+                street = $("#street").val()
+                city = $("#city").val()
+                json = {
+                  "name": name,
+                  "firstname": firstname,
+                  "email": email,
+                  "street": street,
+                  "city": city
+                }
+                $.ajax({
+                    url: URLbase + "/customer",
+                    type: "POST",
+                    data: JSON.stringify(json),
+                    headers: {
+                      "content-type": "application/json",
+                      "accept": "application/json"
+                    },
+                    success: function (response) {
+                        console.log(response)
+                        $("#main-container").load("./widget-customer.html");
+                    },
+                    error: function (error) {
+                        $("#main-container").load("error.html");
+                    }
+            });
+        })
+      </script>
+</body>
+</html>

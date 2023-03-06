@@ -1,0 +1,3 @@
+INSERT INTO CUSTOMER (id, name ,firstname, email, street, city) VALUES (10001, 'Pratik', 'Sathaye', 'pratik@example.com', 'C/ la camara','Aviles');
+INSERT INTO CUSTOMER (id, name ,firstname, email, street, city) VALUES (10002, 'Martin', 'Fowler', 'martin@example.com', 'C/ la camara','Aviles');
+INSERT INTO CUSTOMER (id, name ,firstname, email, street, city) VALUES (10003, 'Bob', 'Martin', 'bob@example.com', 'C/ la camara','Aviles');

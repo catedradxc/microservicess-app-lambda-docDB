@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Order : Add</h1>
+    <div class="container text-center"></div>
+        <div class="form-group row">
+            <label for="selectCustomer" class="col-auto">Customer</label> 
+            <select class="form-select col-auto" aria-label="Default select example" name="selectCustomer" id="seleccion">
+                
+            </select>
+        </div>
+    
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+                <label>Id</label>
+            </div>
+            <div class="col-auto">
+                <label>Count</label>
+            </div>
+            <div class="col-auto">
+                <label>Item</label>
+            </div>
+        </div>
+    
+        <div id="orderlines"> <!-- añadir aqui las lineas -->
+        
+        </div>
+    </div>
+    <div class="container text-center">
+        <div class="row g-3 align-items-center">
+            <button type="button" id="addline" class="btn btn-dark col-auto" onclick="createLine()">Add Line</button>
+            <button type="button" class="btn btn-dark col-auto" id="crear">Submit</button>
+        </div>
+    </div>
+    <script>
+        var customers;
+        var items;
+        var numOrderlines = 1;
+        function loadItems() {
+            $.ajax({
+            url: URLbase + "/catalog",
+            type: "GET",
+            data: {},
+            dataType: 'json',
+            success: function (response) {
+              items = response;
+            },
+            error: function (error) {
+              $("#main-container").load("error.html");
+            }
+            });
+        }
+        function loadCustomers() {
+            $.ajax({
+            url: URLbase + "/customer",
+            type: "GET",
+            data: {},
+            dataType: 'json',
+            success: function (response) {
+              customers = response;
+              for (i = 0; i < customers.length; i++) {
+                $('#seleccion').append(
+                    "<option value='"+customers[i].id+"'" +
+                    "id='"+customers[i].id+"'>"+ customers[i].firstname + ' ' + customers[i].name+"</option>"
+                )
+              }
+            },
+            error: function (error) {
+              $("#main-container").load("error.html");
+            }
+            });
+        }
+        function createLine(){
+            $("#orderlines").append(
+            "<div class='row' id='orderline'>" +
+				"<div class='col-auto' id='num'>"+numOrderlines+"</div>"+
+				"<div class='col-auto'>" +
+					"<input type='text' id='count' value='0'/>" +
+				"</div>" +
+				"<div class='col-auto'>" +
+					"<select class='form-select' aria-label='Default select example' id='items"+numOrderlines+"'>" +
+					"</select>" +
+				"</div>" +
+			"</div>"
+            );
+            updateItems(numOrderlines);
+            numOrderlines+=1;
+        }
+        function updateItems(num){
+            for(i = 0; i < items.length; i++){
+                $("#items"+num).append(
+                "<option id='"+items[i].id+"' value='"+items[i].id+"'>"+ items[i].name+" - "+items[i].price +"€</option>" 
+                );
+            }
+        }
+        $("#crear").click(
+            function addOrder(){
+                var customerid = $('#seleccion').val();
+                var orderlines = $("div[id='orderline']")
+                var l = [];
+                let numlines = 1
+                orderlines.each(function(){
+                    let id = this.querySelector('#num').textContent;
+                    let cantidad = this.querySelector('#count').value;
+                    let itemid = $('#items'+numlines).val()
+                    l.push({
+                        "count": cantidad,
+                        "itemId": itemid
+                    });
+                });
+                json = {
+                    "customerId": customerid,
+                    "orderLine": l
+                }
+                $.ajax({
+                    url: URLbase + "/order",
+                    type: "POST",
+                    data: JSON.stringify(json),
+                    headers: {
+                        "content-type": "application/json",
+                        "accept": "application/json"
+                    },
+                    success: function (response) {
+                        $("#main-container").load("./widget-order.html");
+                    },
+                    error: function (error) {
+                        $("#main-container").load("error.html");
+                    }
+            });
+        })
+        loadItems()
+        loadCustomers()
+      </script>
+</body>
+</html>

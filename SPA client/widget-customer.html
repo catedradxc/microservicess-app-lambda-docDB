@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<h2>Customer service</h2>
+    <br>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">name</th>
+            <th scope="col">firstname</th>
+            <th scope="col">email</th>
+            <th scope="col">street</th>
+            <th scope="col">city</th>
+            <th scope="col">delete</th>
+            <th scope="col">details</th>
+          </tr>
+        </thead>
+        <tbody id="table-customer">
+
+        </tbody>
+      </table>
+      <button type="button" id="create-customer" class="btn btn-dark" onclick="loadResource('widget-add-customer.html')">Add customer</button>
+      <script>
+        var items;
+        function loadItems() {
+          $.ajax({
+          url: URLbase + "/customer",
+          type: "GET",
+          data: {},
+          dataType: 'json',
+          success: function (response) {
+            customers = response;
+            updateItemsTable(customers);
+          },
+          error: function (error) {
+            $("#main-container").load("error.html");
+          }
+          });
+        }
+      
+        function updateItemsTable(customers) {
+          $("#table-customer").empty(); // Vaciar la tabla
+          for (i = 0; i < customers.length; i++) {
+            $("#table-customer").append(
+            "<tr id=" + customers[i].id + ">" +
+            "<td>" + i + "</td>" +
+            "<td>" + customers[i].name + "</td>" +
+            "<td>" + customers[i].firstname + "</td>" +
+            "<td>" + customers[i].email + "</td>" +
+            "<td>" + customers[i].street + "</td>" +
+            "<td>" + customers[i].city + "</td>" +
+            "<td>" +
+            "<a id='"+customers[i].name+"-delete' onclick=customerDelete('" + customers[i].id + "')>Delete</a>" +
+            "</td>" +
+            "<td>" +
+            "<a onclick=showDetails('" + customers[i].id + "')>Details</a>" +
+            "</td>" +
+            "</tr>");
+          }
+        }
+        function customerDelete(customerId){
+          $.ajax({
+          url: URLbase + "/customer/" + customerId,
+          type: "DELETE",
+          data: {},
+          dataType: 'json',
+          success: function (response) {
+            loadItems()
+          },
+          error: function (error) {
+            $("#main-container").load("error.html");
+          }
+          });
+        }
+        function showDetails(id){
+          customerSelecctedId = id
+          loadResource("widget-customerDetails.html")
+        }
+
+        loadItems();
+      </script>
+	
+</body>
+</html>

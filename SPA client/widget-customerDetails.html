@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<h2>Customer details</h2>
+    <div class="mb-3">
+        <label for="formGroupExampleInput" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Firstname</label>
+        <input type="text" class="form-control" id="firstname" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Email</label>
+        <input type="text" class="form-control" id="email" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Street</label>
+        <input type="text" class="form-control" id="street" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">city</label>
+        <input type="text" class="form-control" id="city" readonly>
+      </div>
+      <button type="button" class="btn btn-link" id="back" >Back</button>
+	
+    <script>
+        $("#back").click(() => {
+            loadResource("widget-customer.html")
+        })
+        function loadItem(){
+          $.ajax({
+          url: URLbase + "/customer/" + customerSelecctedId,
+          type: "GET",
+          data: {},
+          dataType: 'json',
+          success: function (response) {
+            customer = response;
+            $("#name").val(customer.name)
+            $("#firstname").val(customer.firstname)
+            $("#email").val(customer.email)
+            $("#street").val(customer.street)
+            $("#city").val(customer.city)
+          },
+          error: function (error) {
+            $("#main-container").load("error.html");
+          }
+          });
+        }
+        loadItem()
+    </script>
+</body>
+</html>

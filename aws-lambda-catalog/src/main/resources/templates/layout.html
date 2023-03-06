@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Layout</title>
+<link rel="stylesheet"
+	href="./webjars/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="./webjars/bootstrap/3.3.6/css/bootstrap-theme.min.css" />
+<style type="text/css">
+    .navbar ul { list-style: none; display: inline-block; padding: 0;}
+    .navbar ul li { display: inline-block; padding-right: .5em; }
+</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="navbar">
+			<ul class="navbar-inner">
+				<li><a class="brand" href="/">Home</a></li>
+				<li><a class="brand" href="list.html">List</a></li>
+				<li><a class="brand" href="searchForm.html">Search</a></li>
+				<li><a class="brand" href="form.html">Form</a></li>
+			</ul>
+		</div>
+		<h1 layout:fragment="header">Layout</h1>
+		<div layout:fragment="content">
+
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<td>id</td>
+						<td>Name</td>
+						<td>Price</td>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="tbody">
+						<td><a href="1.html" th:href="${item.id+'.html'}"
+							th:text="${item.id}">1</a></td>
+						<td th:text="${item.name}">Name</td>
+						<td th:text="${item.price}">42.0</td>
+						<td><form th:action="${item.id+'.html'}"
+								th:method="delete">
+								<input type="submit" value="delete" class="btn btn-link" />
+							</form></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="row">
+				<div class="col-md-4">
+					<a href="form.html">Add Item</a>
+				</div>
+			</div>
+			<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+			<script>
+				var url = "https://wby27cgbrc.execute-api.eu-central-1.amazonaws.com/dev/catalog"
+				$(document).ready(function(){
+					$.ajax({
+						type: 'GET',
+						url: url,
+						success: function(data){
+							$('#tbody').html('')
+							data.Items.forEach(element => {
+								$('#tbody').append(
+									'<td><a href="hola"' + element.name + '>hola</a></td>'
+								)
+							});
+						},
+						error: function(error){
+							//
+						}
+
+					})
+				})
+			</script>
+		</div>
+	</div>
+	<script src="./webjars/bootstrap/3.3.6/js/bootstrap.min.js" />
+</body>
+</html>

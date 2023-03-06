@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<h2>Catalog service</h2>
+  <br>
+  
+  <div class="mb-3">
+    <input type="text" class="form-control" id="txSearch" aria-describedby="search" placeholder="search">
+  </div>
+  <button type="button" class="btn btn-primary" id="search">Search</button>
+  
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">name</th>
+            <th scope="col">price</th>
+            <th scope="col">delete</th>
+            <th scope="col">details</th>
+          </tr>
+        </thead>
+        <tbody id="table-catalog">
+
+        </tbody>
+      </table>
+      <button type="button" id="create-item" class="btn btn-dark" onclick="loadResource('widget-add-item.html')">Add item</button>
+      <script>
+        var items;
+        function loadItems() {
+          $.ajax({
+          url: URLbase + "/catalog",
+          type: "GET",
+          data: {},
+          dataType: 'json',
+          success: function (response) {
+            items = response;
+            updateItemsTable(items);
+          },
+          error: function (error) {
+            $("#main-container").load("error.html");
+          }
+          });
+        }
+      
+        function updateItemsTable(items) {
+          $("#table-catalog").empty(); // Vaciar la tabla
+          for (i = 0; i < items.length; i++) {
+            $("#table-catalog").append(
+            "<tr id=" + items[i].id + ">" +
+            "<td>" + i + "</td>" +
+            "<td>" + items[i].name + "</td>" +
+            "<td>" + items[i].price + "</td>" +
+            "<td>" +
+            "<a id='"+items[i].name+"-delete' onclick=itemDelete('" + items[i].id + "')>Delete</a>" +
+            "</td>" +
+            "<td>" +
+            "<a onclick=showDetails('" + items[i].id + "')>Details</a>" +
+            "</td>" +
+            "</tr>");
+          }
+        }
+        function itemDelete(itemId){
+          $.ajax({
+          url: URLbase + "/catalog/" + itemId,
+          type: "DELETE",
+          data: {},
+          dataType: 'json',
+          success: function (response) {
+            
+            loadItems();
+          },
+          error: function (error) {
+            $("#main-container").load("error.html");
+          }
+          });
+        }
+        function showDetails(id){
+          itemSelecctedId = id
+          loadResource("widget-itemDetails.html")
+        }
+        $("#search").click(() => {
+          itemname = $("#txSearch").val()
+          $.ajax({
+          url: URLbase + "/catalog/name/" + itemname,
+          type: "GET",
+          data: {},
+          dataType: 'json',
+          success: function (response) {
+            items = response;
+            updateItemsTable(items);
+          },
+          error: function (error) {
+            $("#main-container").load("error.html");
+          }
+          });  
+        })
+
+        loadItems();
+      </script>
+	
+</body>
+</html>

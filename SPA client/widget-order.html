@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<h2>Order service</h2>
+  <br>
+  
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">ID</th>
+        <th scope="col">Customer</th>
+        <th scope="col">Total price</th>
+        <th scope="col">delete</th>
+      </tr>
+    </thead>
+    <tbody id="table-order">
+
+    </tbody>
+  </table>
+  <button type="button" id="create-order" class="btn btn-dark" onclick="loadResource('widget-add-order.html')">Add order</button>
+    <script>
+        var orders;
+        var items;
+        var customer;
+        function loadItems() {
+          $.ajax({
+          url: URLbase + "/catalog",
+          type: "GET",
+          data: {},
+          dataType: 'json',
+          success: function (response) {
+            items = response;
+          },
+          error: function (error) {
+            $("#main-container").load("error.html");
+          }
+          });
+        }
+        loadItems();
+        function loadOrders() {
+          $.ajax({
+          url: URLbase + "/order",
+          type: "GET",
+          data: {},
+          dataType: 'json',
+          success: function (response) {
+            orders = response;
+            updateItemsTable(orders);
+          },
+          error: function (error) {
+            $("#main-container").load("error.html");
+          }
+          });
+        }
+        function updateItemsTable(orders) {
+          $("#table-order").empty(); 
+          for (i = 0; i < orders.length; i++) {
+            let totalprice = 0;
+            for(j = 0; j < orders[i].orderLines.length ; j++){
+              let item = items.filter(item => item.id === orders[i].orderLines[j].itemId)[0]
+              if(item)
+                totalprice += orders[i].orderLines[j].count * item.price;
+              else
+                totalprice = 0;
+            }
+            $("#table-order").append(
+                "<tr id=" + orders[i].id + ">" +
+                "<td>" + i + "</td>" +
+                "<td>" + orders[i].id + "</td>" +
+                "<td id='cus"+ orders[i].customerId +"'></td>" +
+                "<td>" + totalprice + "</td>" +
+                "<td>" + 
+                  "<a id='"+totalprice+"-delete' onclick=orderDelete('" + orders[i].id + "')>Delete</a>" +
+                "</td>" +
+                "</tr>");
+            loadCustomers(orders[i].customerId);
+          }
+        }
+        loadOrders();
+        function loadCustomers(id) {
+          $.ajax({
+          url: URLbase + "/customer/"+id,
+          type: "GET",
+          data: {},
+          dataType: 'json',
+          success: function (response) {
+            customer = response;
+            console.log(customer)
+            $("#cus"+customer.id).each(function(){
+              this.innerHTML = customer.firstname + " " + customer.name;
+            })
+          },
+          error: function (error) {
+            $("#main-container").load("error.html");
+          }
+          });
+        }
+        function orderDelete(id){
+          $.ajax({
+          url: URLbase + "/order/" + id,
+          type: "DELETE",
+          data: {},
+          dataType: 'json',
+          success: function (response) {
+            loadOrders();
+          },
+          error: function (error) {
+            $("#main-container").load("error.html");
+          }
+          });
+        }
+      </script>
+	
+</body>
+</html>

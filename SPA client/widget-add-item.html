@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<h2>Add item form</h2>
+    <div class="mb-3">
+        <label for="formGroupExampleInput" class="form-label">Item name</label>
+        <input type="text" name="name" class="form-control" id="name" placeholder="name">
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Price</label>
+        <input type="text" name="price" class="form-control" id="price" placeholder="price">
+      </div>
+      <button type="button" class="btn btn-link" id="add">Add</button>
+      <script>
+        $("#add").click(
+            function addItem(){
+                name = $("#name").val()
+                price = $("#price").val()
+                json = {
+                    "name": name,
+                    "price": price
+                }
+                $.ajax({
+                    url: URLbase + "/catalog",
+                    type: "POST",
+                    data: JSON.stringify(json),
+                    headers: {
+                        "content-type": "application/json",
+                        "accept": "application/json"
+                    },
+                    success: function (response) {
+                        $("#main-container").load("./widget-catalog.html");
+                    },
+                    error: function (error) {
+                        $("#main-container").load("error.html");
+                    }
+            });
+        })
+      </script>
+</body>
+</html>

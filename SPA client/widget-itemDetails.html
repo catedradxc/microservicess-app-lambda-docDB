@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<h2>Item details</h2>
+    <div class="mb-3">
+        <label for="formGroupExampleInput" class="form-label">Item name</label>
+        <input type="text" class="form-control" id="name" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Price</label>
+        <input type="text" class="form-control" id="price" readonly>
+      </div>
+      <button type="button" class="btn btn-link" id="back" >Back</button>
+	
+    <script>
+        $("#back").click(() => {
+            loadResource("widget-catalog.html")
+        })
+        function loadItem(){
+          $.ajax({
+          url: URLbase + "/catalog/" + itemSelecctedId,
+          type: "GET",
+          data: {},
+          dataType: 'json',
+          success: function (response) {
+            item = response;
+            $("#name").val(item.name)
+            $("#price").val(item.price)
+          },
+          error: function (error) {
+            $("#main-container").load("error.html");
+          }
+          });
+        }
+        loadItem()
+    </script>
+</body>
+</html>
